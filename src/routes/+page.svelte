@@ -1,33 +1,28 @@
 <script>
   // @ts-nocheck
-
-  import welcome from '$lib/images/svelte-welcome.webp';
-  import welcome_fallback from '$lib/images/svelte-welcome.png';
+  // import welcome from '$lib/images/svelte-welcome.webp';
+  // import welcome_fallback from '$lib/images/svelte-welcome.png';
+	import { onDestroy, onMount } from 'svelte';
   import ToDoItem from './ToDoItem.svelte';
+  import { writable } from 'svelte/store';
+  import { fromLocalStorage, toLocalStorage } from '$lib/store';
+  import { v4 as uuidv4 } from 'uuid';
+  import APP_CONSTANT from '$lib/constant'
 
-  let newTodo = ''
+  let isLoading = true;
 
-  let uid = -1;
-  let toDoList = [
-    {
-      id: uid++,
-      title: 'To do item' + uid,
-      createDate: new Date(),
-      status: false,
-    },
-    {
-      id: uid++,
-      title: 'To do item' + uid,
-      createDate: new Date(),
-      status: false,
-    },
-    {
-      id: uid++,
-      title: 'To do item' + uid,
-      createDate: new Date(),
-      status: true,
-    },
-  ];
+  let newTodo = '';
+  let toDoList = [];
+  $: undoneTasks = toDoList.filter((item) => !item.status).length;
+  $: completedTasks = toDoList.filter((item) => item.status).length;
+
+	onMount(async () => {
+		let store = writable(fromLocalStorage('to-do-app-tasks', []));
+    store.subscribe(value => {
+      toDoList = [...value];
+      isLoading = false;
+    })
+	});
 
   /**
    * @param {Object} input
@@ -36,7 +31,7 @@
   function addToDo(input) {
     if (!event) return;
     const todo = {
-      id: uid++,
+      id: uuidv4(),
       status: false,
       title: input.value,
       createDate: new Date(),
@@ -90,13 +85,43 @@
     }
   }
 
-  $: undoneTasks = toDoList.filter((item) => !item.status).length;
-  $: completedTasks = toDoList.filter((item) => item.status).length;
+  function saveToDoList() {
+		let store = writable(fromLocalStorage('to-do-app-tasks', toDoList));
+    store.set(toDoList);
+    toLocalStorage(store, 'to-do-app-tasks')
+  }
+
+  onDestroy(() => saveToDoList());
 </script>
 
+<svelte:window on:beforeunload={saveToDoList} />
+
 <svelte:head>
-  <title>Home</title>
-  <meta name="description" content="Svelte demo app" />
+  <title>To-Do {APP_CONSTANT.subfix}</title>
+  <meta name="description" content={APP_CONSTANT.description} />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:site" content="@dovanminhan" />
+  <meta name="twitter:title" content={'To-Do ' + APP_CONSTANT.subfix} />
+  <meta name="twitter:description" content={APP_CONSTANT.description} />
+  <meta name="twitter:image" content={APP_CONSTANT.domain + 'to-do-twitter-card.png'} />
+  <meta
+    name="twitter:image"
+    content={APP_CONSTANT.domain + 'to-do-twitter-card.png'}
+  />
+  <meta
+    property="og:url"
+    content={APP_CONSTANT.domain}
+  />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content={'About ' + APP_CONSTANT.subfix} />
+  <meta
+    property="og:description"
+    content={APP_CONSTANT.description}
+  />
+  <meta
+    property="og:image"
+    content={APP_CONSTANT.domain + 'to-do-twitter-card.png'}
+  />
 </svelte:head>
 
 <section>
@@ -132,8 +157,8 @@
     </ul>
     <div class="add-todo-container">
       <input
-        class="bg-transparent outline-none"
-        placeholder="what needs to be done?"
+        class="bg-transparent outline-none ml-2.5"
+        placeholder="Your next task"
         bind:value={newTodo}
         on:keydown={(e) => e.key === 'Enter' && e.target && addToDo(e.target)}
       />

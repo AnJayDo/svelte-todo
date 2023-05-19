@@ -114,11 +114,14 @@ button:focus:not(:focus-visible) {
 	.border-primary {
 		border-color: var(--color-theme-1);
 	}
+	.outline-primary {
+		outline-color: var(--color-theme-1);
+	}
 	.bg-primary {
 		background-color: var(--color-theme-1);
 	}
 	.main-container {
-		@apply flex flex-col justify-center items-center;
+		@apply flex flex-col justify-center items-center pb-32;
 	}
 	.todo-item {
 		@apply flex rounded-md border-2 border-slate-300 
@@ -192,7 +195,7 @@ button:focus:not(:focus-visible) {
 		}
 	}
 	.add-todo-container {
-		@apply fixed bottom-8 w-fit flex mx-auto rounded-full border-2 border-primary pl-3 pr-2 py-1.5;
+		@apply fixed bg-white bottom-8 w-fit flex mx-auto rounded-full border-2 border-primary pl-3 pr-2 py-1.5;
 
 		.add-btn {
 			@apply bg-primary py-2 px-4 ml-2 font-bold text-white rounded-full;

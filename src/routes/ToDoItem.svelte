@@ -4,6 +4,7 @@
   import { createEventDispatcher } from 'svelte';
 
   const dispatch = createEventDispatcher();
+  let isEditing = false;
 
   /**
    * @type {{
@@ -37,24 +38,36 @@
    */
   function handleClick(event, item) {
     if (!item.status) {
-      console.log('Do undone')
       dispatch('undoneItem', item);
     } else {
       dispatch('doneItem', item);
     }
   }
 
-  // function handleInput(event) {
-  //   console.log(event)
-  // }
+  /** @function
+   * @name handleEdit
+   */
+  function handleEdit() {
+    isEditing = !isEditing;
+  }
 </script>
 
-  <li
-    transition:slide={{duration: 400}}
-    class={`todo-item ` + (!item.status ? '' : 'done')}
-  >
-    <!-- svelte-ignore a11y-click-events-have-key-events -->
-    <div class="todo-clickable">
+<li
+  transition:slide={{ duration: 400 }}
+  class={`todo-item ` + (!item.status ? '' : 'done')}
+>
+  <!-- svelte-ignore a11y-click-events-have-key-events -->
+  <div class="todo-clickable">
+    {#if isEditing}
+      <label class="w-full flex items-center">
+        <input
+          class='w-full h-9 my-auto rounded-sm outline-primary mr-2.5 pl-2'
+          type="text"
+          bind:value={item.title}
+          on:keydown={(e) => e.key === 'Enter' && handleEdit()}
+        />
+      </label>
+    {:else}
       <label class="todo-checkbox-container">
         <input
           class={`todo-checkbox before:content-['']`}
@@ -65,9 +78,11 @@
         />
         <div class="todo-title">{item?.title}</div>
       </label>
-    </div>
-    <div class="btn-container">
-      <button class="edit-btn svg-btn" on:click={() => deleteItem(item.id)}>
+    {/if}
+  </div>
+  <div class="btn-container">
+    <button class="edit-btn svg-btn" on:click={() => handleEdit()}>
+      {#if isEditing}
         <Icon
           color={'#ffffff'}
           class="not-hover"
@@ -78,14 +93,26 @@
           class="on-hover"
           icon="ph:pencil-simple-line-duotone"
         />
-      </button>
-      <button class="delete-btn svg-btn" on:click={() => deleteItem(item.id)}>
-        <Icon color={'#ffffff'} class="not-hover" icon="mdi:delete-outline" />
+      {:else}
+        <Icon
+          color={'#ffffff'}
+          class="not-hover"
+          icon="ph:pencil-simple-duotone"
+        />
         <Icon
           color={'#ffffff'}
           class="on-hover"
-          icon="mdi:delete-empty-outline"
+          icon="ph:pencil-simple-line-duotone"
         />
-      </button>
-    </div>
-  </li>
+      {/if}
+    </button>
+    <button class="delete-btn svg-btn" on:click={() => deleteItem(item.id)}>
+      <Icon color={'#ffffff'} class="not-hover" icon="mdi:delete-outline" />
+      <Icon
+        color={'#ffffff'}
+        class="on-hover"
+        icon="mdi:delete-empty-outline"
+      />
+    </button>
+  </div>
+</li>
