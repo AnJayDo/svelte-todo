@@ -1,18 +1,19 @@
-# create-svelte
+# To-Do App written with Svelter
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
+![To-Do App written with Svelte cover](https://static.skillshare.com/cdn-cgi/image/quality=85,width=1242,height=839,format=auto/uploads/project/518992/cover_1242_58cf05691b99a7cbcc731e49ca4cf8f0.png)
 
-## Creating a project
+This is a To-Do app written with Svelte and Tailwind CSS, inspired by To Do example app and Microsoft To Do App. The app will save the tasks on the storage and users can finish them on other days.
 
-If you're seeing this, you've probably already done this step. Congrats!
+# Demos v1.0
 
-```bash
-# create a new project in the current directory
-npm create svelte@latest
+![To-Do App demo image](https://raw.githubusercontent.com/dovanminhan/svelte-todo/main/static/To-do%20App%20v1.0%20(Mobile).png)
 
-# create a new project in my-app
-npm create svelte@latest my-app
-```
+
+## Live link
+
+[`To-do App page`](https://todo.dovanminhan.com/)
+
+Powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
 
 ## Developing
 
@@ -24,15 +25,3 @@ npm run dev
 # or start the server and open the app in a new browser tab
 npm run dev -- --open
 ```
-
-## Building
-
-To create a production version of your app:
-
-```bash
-npm run build
-```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
